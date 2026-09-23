@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>SVGEditorClass</class>
+ <widget class="QWidget" name="SVGEditorClass">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1040</width>
+    <height>753</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>SVGEditor</string>
+  </property>
+  <widget class="QTabWidget" name="tabWidget">
+   <property name="geometry">
+    <rect>
+     <x>210</x>
+     <y>10</y>
+     <width>821</width>
+     <height>641</height>
+    </rect>
+   </property>
+   <property name="currentIndex">
+    <number>1</number>
+   </property>
+   <widget class="QWidget" name="EditTab">
+    <attribute name="title">
+     <string>Edit</string>
+    </attribute>
+    <widget class="QTextEdit" name="textEdit">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>20</y>
+       <width>791</width>
+       <height>581</height>
+      </rect>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="ViewTab">
+    <attribute name="title">
+     <string>View</string>
+    </attribute>
+    <widget class="QGraphicsView" name="graphicsView">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>10</y>
+       <width>791</width>
+       <height>591</height>
+      </rect>
+     </property>
+    </widget>
+   </widget>
+  </widget>
+  <widget class="QPushButton" name="pushButtonLoad">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>190</y>
+     <width>75</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Folder</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButtonSave">
+   <property name="geometry">
+    <rect>
+     <x>120</x>
+     <y>710</y>
+     <width>75</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Save</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>20</y>
+     <width>151</width>
+     <height>161</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="pixmap">
+    <pixmap resource="svgeditor.qrc">:/Clover/images/Clover.png</pixmap>
+   </property>
+   <property name="scaledContents">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButtonNew">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>710</y>
+     <width>75</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>New</string>
+   </property>
+  </widget>
+  <widget class="QTextEdit" name="textEditLog">
+   <property name="geometry">
+    <rect>
+     <x>220</x>
+     <y>660</y>
+     <width>790</width>
+     <height>70</height>
+    </rect>
+   </property>
+  </widget>
+ </widget>
+ <resources>
+  <include location="svgeditor.qrc"/>
+ </resources>
+ <connections/>
+</ui>

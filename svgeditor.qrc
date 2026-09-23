@@ -1,0 +1,5 @@
+<RCC>
+  <qresource prefix="Clover">
+    <file>images/Clover.png</file>
+  </qresource>
+</RCC>
