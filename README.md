@@ -31,7 +31,7 @@ Thanks also to:
  * darealshinji - multiple improvements
  * technosaurus - independent x-y scaling
  * olivierchatry - added suppport for stylesheets and other small improvements
- * JaimeIvanCervantes - idea for <use href>
+ * JaimeIvanCervantes - idea for "use href"
  * MalcolmMcLean - forwards differencing to flatten Bezier, binary search color name - improve speed
  * poke1024 - fix handling of <defs> after <g>, add basic support for clip paths
  * SergeySlice for all these improvements and further developement
