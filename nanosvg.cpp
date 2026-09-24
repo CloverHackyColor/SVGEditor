@@ -3331,6 +3331,7 @@ static void nsvg__parseUse(NSVGparser* p, char** dict)
     shape = (NSVGshape*)nsvg__alloccopy(sizeof(NSVGshape), ref, "nsvg__parseUse shape"_XS8);
     if (shape == NULL) return;
     memcpy(shape->xform, &xform[0], sizeof(float)*6);
+    shape->clipList = nullptr;
     shape->isSymbol = false;
     shape->link = ref;
     shape->group = attr->group;
@@ -3363,7 +3364,7 @@ static void nsvg__parseUse(NSVGparser* p, char** dict)
     shape = (NSVGshape*)nsvg__alloczero(sizeof(NSVGshape), "nsvg__parseUse shape2"_XS8);
     if (shape == NULL) return;
     memcpy(shape->xform, xform, sizeof(float)*6);
-
+    shape->clipList = nullptr;
     shape->isSymbol = true;
     shape->link = refSym->shapes;
     shape->group = attr->group;
@@ -4927,10 +4928,10 @@ NSVGparser* nsvg__parse(char* input, float dpi, float opacity)
 
 void nsvg__deleteShapes(NSVGshape* shape)
 {
-  NSVGshape *snext;
   while (shape != NULL) {
-    snext = shape->next;
+    NSVGshape* next = shape->next;
     nsvg__deleteClipList(shape->clipList);
+    shape->clipList = nullptr;
     if (!shape->link) { //don't touch fake shape!
       nsvg__deleteFont(shape->fontFace);
       shape->fontFace = NULL;
@@ -4942,7 +4943,7 @@ void nsvg__deleteShapes(NSVGshape* shape)
     }
 
     nsvg__delete(shape, "nsvg__deleteShapes"_XS8);
-    shape = snext;
+    shape = next;
   }
 }
 
