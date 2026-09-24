@@ -925,6 +925,7 @@ static void nsvg__pushAttr(NSVGparser* p)
 
     // После memcpy список родителя нельзя использовать совместно.
     current->clipList = nsvg__cloneClipList(parent->clipList);
+    current->fontFace = nullptr;
 }
 
 static void nsvg__popAttr(NSVGparser* p)
