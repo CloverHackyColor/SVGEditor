@@ -3341,6 +3341,24 @@ static void nsvg__parseUse(NSVGparser* p, char** dict)
     shape->bounds[3] = -FLT_MAX;
     nsvg__takeXformBounds(ref, &xform[0], shape->bounds);
 
+    if (ref->fill.type == NSVG_PAINT_GRADIENT_LINK &&
+      ref->fill.paint.gradientLink) {
+      shape->fill.paint.gradientLink =
+        (NSVGgradientLink*)nsvg__alloccopy(
+          sizeof(NSVGgradientLink),
+          ref->fill.paint.gradientLink,
+          "nsvg__parseUse fill gradient link"_XS8);
+    }
+
+    if (ref->stroke.type == NSVG_PAINT_GRADIENT_LINK &&
+      ref->stroke.paint.gradientLink) {
+      shape->stroke.paint.gradientLink =
+        (NSVGgradientLink*)nsvg__alloccopy(
+          sizeof(NSVGgradientLink),
+          ref->stroke.paint.gradientLink,
+          "nsvg__parseUse stroke gradient link"_XS8);
+    }
+
   } else if (refSym) {
     shape = (NSVGshape*)nsvg__alloczero(sizeof(NSVGshape), "nsvg__parseUse shape2"_XS8);
     if (shape == NULL) return;
@@ -3520,7 +3538,7 @@ static void nsvg__parseText(NSVGparser* p, char** dict)
   // } else {
     text->font = fontSVG;  //the font found in fontChain
   //}
-  
+
   //instead of embedded
   if (fontSVG && fontSVG->glyphs) {
     NSVGgroup* group = attr->group;
@@ -4664,6 +4682,7 @@ static void nsvg__assignGradients(NSVGparser* p, NSVGshape* shapes)
       shape->fill.paint.gradient = nsvg__createGradient(p, shape, link, &shape->fill.type);
       if (link != NULL) {
         nsvg__delete(link, "nsvg__assignGradients"_XS8);
+        shape->fill.paint.gradientLink = nullptr;
       }
       if (shape->fill.paint.gradient == NULL) {
         shape->fill.type = NSVG_PAINT_NONE;
@@ -4674,6 +4693,7 @@ static void nsvg__assignGradients(NSVGparser* p, NSVGshape* shapes)
       shape->stroke.paint.gradient = nsvg__createGradient(p, shape, link, &shape->stroke.type);
       if (link != NULL) {
         nsvg__delete(link, "nsvg__assignGradients"_XS8);
+        shape->stroke.paint.gradientLink = nullptr;
       }
       if (shape->stroke.paint.gradient == NULL) {
         shape->stroke.type = NSVG_PAINT_NONE;
