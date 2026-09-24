@@ -4930,9 +4930,10 @@ void nsvg__deleteShapes(NSVGshape* shape)
 {
   while (shape != NULL) {
     NSVGshape* next = shape->next;
-    nsvg__deleteClipList(shape->clipList);
-    shape->clipList = nullptr;
+
     if (!shape->link) { //don't touch fake shape!
+      nsvg__deleteClipList(shape->clipList);
+      shape->clipList = nullptr;
       nsvg__deleteFont(shape->fontFace);
       shape->fontFace = NULL;
       nsvg__deletePaint(&shape->fill);
