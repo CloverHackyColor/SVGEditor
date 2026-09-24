@@ -1479,10 +1479,11 @@ static void nsvg__unpremultiplyAlpha(UINT8* image, int w, int h, int stride)
     UINT8 *row = &image[y*stride];
     for (int x = 0; x < w; x++) {
       int r = row[0], g = row[1], b = row[2], a = row[3];
+      // однако, меняем R и B местами, чтобы было как в PNG (RGBA)
       if (a != 0) {
-        row[0] = (UINT8)(r*255/a);
+        row[0] = (UINT8)(b*255/a);
         row[1] = (UINT8)(g*255/a);
-        row[2] = (UINT8)(b*255/a);
+        row[2] = (UINT8)(r*255/a);
       }
       row += 4;
     }
