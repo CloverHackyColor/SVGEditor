@@ -4682,7 +4682,7 @@ static void nsvg__assignGradients(NSVGparser* p, NSVGshape* shapes)
       shape->fill.paint.gradient = nsvg__createGradient(p, shape, link, &shape->fill.type);
       if (link != NULL) {
         nsvg__delete(link, "nsvg__assignGradients"_XS8);
-        shape->fill.paint.gradientLink = nullptr;
+        //shape->fill.paint.gradientLink = nullptr;
       }
       if (shape->fill.paint.gradient == NULL) {
         shape->fill.type = NSVG_PAINT_NONE;
@@ -4693,7 +4693,7 @@ static void nsvg__assignGradients(NSVGparser* p, NSVGshape* shapes)
       shape->stroke.paint.gradient = nsvg__createGradient(p, shape, link, &shape->stroke.type);
       if (link != NULL) {
         nsvg__delete(link, "nsvg__assignGradients"_XS8);
-        shape->stroke.paint.gradientLink = nullptr;
+        //shape->stroke.paint.gradientLink = nullptr;
       }
       if (shape->stroke.paint.gradient == NULL) {
         shape->stroke.type = NSVG_PAINT_NONE;
