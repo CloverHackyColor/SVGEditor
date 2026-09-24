@@ -3467,8 +3467,13 @@ static bool nsvg__parseText(NSVGparser* p, char** dict)
     } else if (strcmp(dict[i], "y") == 0) {
       y = nsvg__parseCoordinate(p, dict[i+1], nsvg__actualOrigY(p), nsvg__actualHeight(p));
     } else {
+      DBG("analyze text attr %s=%s\n", dict[i], dict[i + 1]);
       nsvg__parseAttr(p, dict[i], dict[i + 1]);
     }
+  }
+  if (!attr->fontFace) {
+    DBG("text without fontFace\n");
+    return false;
   }
   text->x = x;
   text->y = y;

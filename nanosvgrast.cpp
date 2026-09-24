@@ -406,7 +406,7 @@ static void nsvg__flattenShape(NSVGrasterizer* r, NSVGshape* shape, float* xform
   NSVGpoint pt;
   //DBG("nsvg__flattenShape\n");
 
-  //  nsvg__dumpFloat("flattenShape with", xform, 6);
+  DBG("xform: %f %f %f %f %f %f\n", xform[0], xform[1], xform[2], xform[3], xform[4], xform[5]);
   for (path = shape->paths; path != NULL; path = path->next) {
     r->npoints = 0;
     // Flatten path
