@@ -2462,7 +2462,7 @@ static void nsvg__parseStyle(NSVGparser* p, const char* str)
   const char* start;
   const char* end;
 
-  if (str == NULL) return;
+  if (!p || !str) return;
 
   while (*str) {
     // Left Trim
@@ -3448,7 +3448,7 @@ static void nsvg__parseTextSpan(NSVGparser* p, char** dict)
 }
 
 
-static void nsvg__parseText(NSVGparser* p, char** dict)
+static bool nsvg__parseText(NSVGparser* p, char** dict)
 {
   float x = 0.0f;
   float y = 0.0f;
@@ -3457,7 +3457,7 @@ static void nsvg__parseText(NSVGparser* p, char** dict)
 
   NSVGtext* text = (NSVGtext*)nsvg__alloczero(sizeof(NSVGtext), "nsvg__parseText"_XS8);
   if (!text) {
-    return;
+    return false;
   }
   text->group = attr->group;
 
@@ -3509,36 +3509,9 @@ static void nsvg__parseText(NSVGparser* p, char** dict)
     fontChain = fontChainSimilar;
     fontSVG = fontChain->font;
   }
-  // if (!fontChain) {  // font not found in the chain
-  //   //then load it
-  //   UINT8           *FileData = NULL;
-  //   UINTN           FileDataLength = 0;
-  //   NSVGparser      *p1 = NULL;
-  //   EFI_STATUS      Status = EFI_NOT_FOUND;
-  //   XStringW FontFileName = XStringW().takeValueFrom(text->fontFace->fontFamily) + L".svg"_XSW;
-  //   Status = egLoadFile(&ThemeX->getThemeDir(), FontFileName.wc_str(), &FileData, &FileDataLength);
-  //   if (!EFI_ERROR(Status)) {
-  //     p1 = nsvg__parse((CHAR8*)FileData, 72, 1.0f);  //later we will free parser p1
-  //     if (!p1) {
-  //     } else {
-  //       // Jief : this is only taking the first font from the file. It would not be hard to take the whole p1->fontsDB and to link it on p->fontsDB
-  //       NSVGfontChain* fc = p1->fontsDB;
-  //       p1->fontsDB = p1->fontsDB->next;
-  //       fc->next = p->fontsDB;
-  //       p->fontsDB = fc;
 
-  //       fontSVG = p->fontsDB->font; //last added during parse file data
-  //       text->font = fontSVG;
-  //       nsvg__deleteParser(p1);
-  //     }
-  //     FreePool(FileData); //after load // don not use nsvg__delete because it's not allocated by nsvg__alloc...
-  //     FileData = NULL;
-  //   } else {
-  //     text->font = p->currentFont; //else embedded if present which is also double fontChain
-  //   }
-  // } else {
-    text->font = fontSVG;  //the font found in fontChain
-  //}
+  text->font = fontSVG;  //the font found in fontChain
+  
 
   //instead of embedded
   if (fontSVG && fontSVG->glyphs) {
@@ -3603,6 +3576,7 @@ static void nsvg__parseText(NSVGparser* p, char** dict)
   text->next = p->text;
   p->text = text;
   p->isText = 1;
+  return true;
 }
 
 static void nsvg__parseCircle(NSVGparser* p, char** attr)
@@ -4323,8 +4297,8 @@ static void nsvg__startElement(void* ud, const char* el, char** dict)
     nsvg__parseGroup(p, dict);
   } else if (strcmp(el, "text") == 0) {
     nsvg__pushAttr(p);
-    p->isText = 1;
-    nsvg__parseText(p, dict);
+    if (nsvg__parseText(p, dict))
+      p->isText = 1;
   } else if (strcmp(el, "tspan") == 0) {
     nsvg__pushAttr(p);
     nsvg__parseTextSpan(p, dict);
@@ -4576,6 +4550,8 @@ float nsvg__addLetter(NSVGparser* p, CHAR16 letter, float x, float y, float scal
 
 static void nsvg__addString(NSVGparser* p, char* s)
 {
+  if (!p || !p->isText || !p->text || !p->text->font)
+    return;
   //text support should create shape for each letter
   size_t len = strlen(s);
   UINTN i;
