@@ -149,6 +149,7 @@ void SVGEditor::onFileSelected(int row)
 
   QFile file(fullPath);
   if (!file.open(QIODevice::ReadOnly)) return;
+  currentFilePath = fullPath;
 
   // Читаем все байты и явно конвертируем из UTF-8
   QByteArray bytes = file.readAll();
@@ -156,7 +157,9 @@ void SVGEditor::onFileSelected(int row)
   ui.textEdit->setPlainText(text);
 
   ui.textEditLog->clear();
-  onDraw();
+  if (ui.tabWidget->currentIndex() == ui.tabWidget->indexOf(ui.ViewTab)) {
+    onDraw();
+  }
 }
 
 void SVGEditor::onChooseFolder()
@@ -176,16 +179,34 @@ void SVGEditor::onChooseFolder()
 
 void SVGEditor::onSave()
 {
+  QString initialPath = currentFilePath;
+
+  if (initialPath.isEmpty()) {
+    initialPath = QDir::homePath() + "/untitled.svg";
+  }
+
   // Пример сохранения в UTF-8 (можно заменить на сохранение в исходный путь)
-  QString filePath = QFileDialog::getSaveFileName(this, tr("Save File"), currentFolder,
-    tr("SVG Files (*.svg);;All Files (*)"));
+
+  QString filePath = QFileDialog::getSaveFileName(
+    this,
+    tr("Save SVG"),
+    initialPath,
+    tr("SVG files (*.svg);;All files (*)"));
+
   if (filePath.isEmpty()) return;
+
+  if (!filePath.endsWith(".svg", Qt::CaseInsensitive)) {
+    filePath += ".svg";
+  }
 
   QFile file(filePath);
   if (!file.open(QIODevice::WriteOnly)) return;
 
-  QByteArray out = ui.textEdit->toPlainText().toUtf8(); // явная конвертация в UTF-8
-  file.write(out);
+  QByteArray data = ui.textEdit->toPlainText().toUtf8(); // явная конвертация в UTF-8
+  if (file.write(data) != data.size() || !file.flush()) {
+    return;
+  }
+  currentFilePath = filePath;
 }
 
 void SVGEditor::createRelations()
@@ -279,12 +300,13 @@ void SVGEditor::createRelations()
 
     // --- Перерисовка SVG ---
     // Используем таймер, чтобы дать время на применение новой геометрии viewport
-    QTimer::singleShot(0, this, &SVGEditor::onDraw);
+    if (ui.tabWidget->currentIndex() == ui.tabWidget->indexOf(ui.ViewTab)) {
+      QTimer::singleShot(0, this, &SVGEditor::onDraw);
+    }
     });
 
   ui.graphicsView->setAlignment(Qt::AlignLeft | Qt::AlignTop);
 
   // Первичный вызов ресайза для установки начальной геометрии при запуске
   emit windowResized();
-
 }

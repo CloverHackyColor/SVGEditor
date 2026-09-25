@@ -37,6 +37,8 @@ private:
   Ui::SVGEditorClass ui;
   QListWidget* fileList;
   QString currentFolder;
+  QString currentFilePath;
+
   void createRelations();
   void populateFileList(const QString& path);
 };
