@@ -4306,7 +4306,8 @@ static void nsvg__startElement(void* ud, const char* el, char** dict)
       p->isText = 1;
   } else if (strcmp(el, "tspan") == 0) {
     nsvg__pushAttr(p);
-    nsvg__parseTextSpan(p, dict);
+    if (p->text != nullptr)
+      nsvg__parseTextSpan(p, dict);
     nsvg__popAttr(p);
   } else if (strcmp(el, "path") == 0) {
     if (p->pathFlag)  {  // Do not allow nested paths.
